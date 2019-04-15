@@ -83,7 +83,7 @@ def peil():
     update= d_t+ ', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
     #print(data)
     
-    fileobj= open('/home/pi/rotweer/records.txt', 'a')
+    fileobj= open('/home/pi/johns_wind/records.txt', 'a')
     fileobj.write(update)
     fileobj.write("\n")
     fileobj.close
