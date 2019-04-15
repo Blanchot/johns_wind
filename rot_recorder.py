@@ -5,6 +5,9 @@ Recording: [temp, windr (direction), windkmh, lv (humidity), luchtd (pressure), 
 at 10 minute intervals and storing these in a csv file
 Info over the weerlive API: http://weerlive.nl/delen.php
 Requires: records.txt in the same folder
+
+Wind Direction: https://en.m.wikipedia.org/wiki/Wind_direction
+https://nl.m.wikipedia.org/wiki/Windstreek
 '''
 
 import requests, json
@@ -27,40 +30,42 @@ def tijd():
   return d_t
 
 def convert_wind_dir(wind_dir: str) -> str:
+  '''Convert NL to UK and add compass directions
+  Winds COME from the direction/compass point given'''
   if wind_dir == 'Noord': #North (N)
-    wind_dir= 'N  '
+    wind_dir= 'N, 0'
   elif wind_dir == 'NNO': #North-northeast (NNE)
-    wind_dir= 'NNE' 
+    wind_dir= 'NNE, 22.5' 
   elif wind_dir == 'NO': # Northeast (NE)
-    wind_dir= 'NE '
+    wind_dir= 'NE, 45'
   elif wind_dir == 'ONO': #East-northeast (ENE)
-    wind_dir= 'ENE'
+    wind_dir= 'ENE, 67.5'
   elif wind_dir == 'Oost': # East (E)
-    wind_dir= 'E  '
+    wind_dir= 'E, 90'
   elif wind_dir == 'OZO': # East-southeast (ESE)
-    wind_dir= 'ESE'
+    wind_dir= 'ESE, 112.5'
   elif wind_dir == 'ZO': # Southeast (SE)
-    wind_dir= 'SE '
+    wind_dir= 'SE, 135'
   elif wind_dir == 'ZZO': # South-southeast (SSE)
-    wind_dir= 'SSE'
+    wind_dir= 'SSE, 157.5'
   elif wind_dir == 'Zuid': # South (S)
-    wind_dir= 'S  '
+    wind_dir= 'S, 180'
   elif wind_dir == 'ZZW': # South-southwest (SSW)
-    wind_dir= 'SSW'
+    wind_dir= 'SSW, 202.5'
   elif wind_dir == 'ZW': # Southwest (SW)
-    wind_dir= 'SW '
+    wind_dir= 'SW, 225'
   elif wind_dir == 'WZW': # West-southwest (WSW)
-    wind_dir= 'WSW'
+    wind_dir= 'WSW, 247.5'
   elif wind_dir == 'West': # West (W)
-    wind_dir= 'W  '
+    wind_dir= 'W, 270'
   elif wind_dir == 'WNW': # West-northwest (WNW)
-    wind_dir= 'WNW'
+    wind_dir= 'WNW, 292.5'
   elif wind_dir == 'NW': # Northwest (NW)
-    wind_dir= 'NW '
+    wind_dir= 'NW, 315'
   elif wind_dir == 'NNW': # North-northwest (NNW)
-    wind_dir= 'NNW'
+    wind_dir= 'NNW, 337.5'
   else:
-        print('No wind direction')
+        print('ERR, ERR')
   return wind_dir
   
 def peil():
