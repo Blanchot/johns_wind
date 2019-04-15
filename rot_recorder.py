@@ -81,7 +81,7 @@ def peil():
     sunset= rwl['liveweer'][0]['sunder'] #sunset: str
     d_t= tijd()
     update= d_t+ ', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
-    #print(data)
+    print(update)
     
     fileobj= open('/home/pi/johns_wind/records.txt', 'a')
     fileobj.write(update)
