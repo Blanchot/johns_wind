@@ -21,7 +21,6 @@ def tijd():
   localdate= localtime.strftime('%d-%m')
   #localtime= localtime.strftime('%H:%M:%S')
   localtime= localtime.strftime('%H:%M')
-  timestamp= str(timestamp)
   d_t= localdate + ' ' + localtime
   #print(localdate)
   #print(localtime)
@@ -80,7 +79,9 @@ def peil():
     sun_up= rwl['liveweer'][0]['sup'] #sun_up: str
     sunset= rwl['liveweer'][0]['sunder'] #sunset: str
     d_t= tijd()
-    update= d_t+ ', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
+    timestamp= int(time.time())
+    timestamp= str(timestamp)
+    update= d_t+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
     print(update)
     
     fileobj= open('/home/pi/johns_wind/records.txt', 'a')
