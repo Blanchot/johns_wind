@@ -80,7 +80,7 @@ def peil():
     sun_up= rwl['liveweer'][0]['sup'] #sun_up: str
     sunset= rwl['liveweer'][0]['sunder'] #sunset: str
     d_t= tijd()
-    data= d_t+ ', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
+    update= d_t+ ', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
     #print(data)
     
     fileobj= open('/home/pi/rotweer/records.txt', 'a')
