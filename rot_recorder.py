@@ -107,7 +107,7 @@ def convert_summary(summary: str) -> str:
   else:
     summary= 0
     print('Unknown! ->:', summary)
-  return summary
+  return str(summary)
 
 
 def convert_image(image: str) -> str:
@@ -140,7 +140,7 @@ def convert_image(image: str) -> str:
   else:
     image= 0
     print('Unknown! ->:', image)
-  return image
+  return str(image)
 
 
 def peil():
