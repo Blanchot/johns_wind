@@ -6,6 +6,8 @@ at 10 minute intervals and storing these in a csv file
 Info over the weerlive API: http://weerlive.nl/delen.php
 Requires: records.txt in the same folder
 
+17 April 2019: Added summary and image (icon) recording and conversion
+  
 Wind Direction: https://en.m.wikipedia.org/wiki/Wind_direction
 https://nl.m.wikipedia.org/wiki/Windstreek
 '''
@@ -16,6 +18,7 @@ import time
 #import pprint
 
 rwl= dict()
+
 
 def tijd():
   timestamp= int(time.time())
@@ -28,6 +31,7 @@ def tijd():
   #print(localdate)
   #print(localtime)
   return d_t
+
 
 def convert_wind_dir(wind_dir: str) -> str:
   '''Convert NL to UK and add compass directions
@@ -67,7 +71,78 @@ def convert_wind_dir(wind_dir: str) -> str:
   else:
         print('ERR, ERR')
   return wind_dir
-  
+
+
+def convert_summary(summary: str) -> str:
+  if summary == 'onbewolkt':
+    summary= 1
+  elif summary == 'licht bewolkt':
+    summary= 2
+  elif summary == 'half bewolkt':
+    summary= 3
+  elif summary == 'geheel bewolkt':
+    summary= 4
+  elif summary == 'zwaar bewolkt':
+    summary= 5
+  elif summary == 'motregen':
+    summary= 6
+  elif summary == 'lichte motregen':
+    summary= 7
+  elif summary == 'dichte motregen':
+    summary= 8
+  elif summary == 'lichte motregen en regen':
+    summary= 9
+  elif summary == 'droog na motregen':
+    summary= 10
+  elif summary == 'motregen en regen':
+    summary= 11
+  elif summary == 'af en toe lichte regen':
+    summary= 12
+  elif summary == 'lichte regen':
+    summary= 13
+  elif summary == 'regen':
+    summary= 14
+  elif summary == 'droog na regen':
+    summary= 15
+  else:
+    summary= 0
+    print('Unknown! ->:', summary)
+  return summary
+
+
+def convert_image(image: str) -> str:
+  if image == 'zonnig':
+    image= 1
+  elif image == 'bliksem':
+    image= 2
+  elif image == 'regen':
+    image= 3
+  elif image == 'buien':
+    image= 4
+  elif image == 'hagel':
+    image= 5
+  elif image == 'mist':
+    image= 6
+  elif image == 'sneeuw':
+    image= 7
+  elif image == 'bewolkt':
+    image= 8
+  elif image == 'halfbewolkt':
+    image= 9
+  elif image == 'zwaarbewolkt':
+    image= 10
+  elif image == 'nachtmist':
+    image= 11
+  elif image == 'helderenacht':
+    image= 12
+  elif image == 'wolkennacht':
+    image= 13
+  else:
+    image= 0
+    print('Unknown! ->:', image)
+  return image
+
+
 def peil():
   global rwl
   weerlive = "http://weerlive.nl/api/json-10min.php?locatie=Rotterdam"
@@ -83,10 +158,14 @@ def peil():
     press= rwl['liveweer'][0]['luchtd'] #press: str
     sun_up= rwl['liveweer'][0]['sup'] #sun_up: str
     sunset= rwl['liveweer'][0]['sunder'] #sunset: str
+    summary= rwl['liveweer'][0]['samenv'] #summary: str
+    summary= convert_summary(summary) #convert to integer
+    image= rwl['liveweer'][0]['image'] #image: str
+    image= convert_image(image) #convert to integer
     d_t= tijd()
     timestamp= int(time.time())
     timestamp= str(timestamp)
-    update= d_t+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press
+    update= d_t+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press+', '+summary+', '+image
     print(update)
     
     fileobj= open('/home/pi/johns_wind/records.txt', 'a')
