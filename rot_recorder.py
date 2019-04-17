@@ -74,7 +74,7 @@ def convert_wind_dir(wind_dir: str) -> str:
 
 
 def convert_summary(summary: str) -> str:
-  if summary == 'onbewolkt':
+  if summary == 'Onbewolkt':
     summary= 1
   elif summary == 'Licht bewolkt':
     summary= 2
