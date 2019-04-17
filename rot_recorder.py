@@ -76,37 +76,37 @@ def convert_wind_dir(wind_dir: str) -> str:
 def convert_summary(summary: str) -> str:
   if summary == 'onbewolkt':
     summary= 1
-  elif summary == 'licht bewolkt':
+  elif summary == 'Licht bewolkt':
     summary= 2
-  elif summary == 'half bewolkt':
+  elif summary == 'Half bewolkt':
     summary= 3
-  elif summary == 'geheel bewolkt':
+  elif summary == 'Geheel bewolkt':
     summary= 4
-  elif summary == 'zwaar bewolkt':
+  elif summary == 'Zwaar bewolkt':
     summary= 5
-  elif summary == 'motregen':
+  elif summary == 'Motregen':
     summary= 6
-  elif summary == 'lichte motregen':
+  elif summary == 'Lichte motregen':
     summary= 7
-  elif summary == 'dichte motregen':
+  elif summary == 'Dichte motregen':
     summary= 8
-  elif summary == 'lichte motregen en regen':
+  elif summary == 'Lichte motregen en regen':
     summary= 9
-  elif summary == 'droog na motregen':
+  elif summary == 'Droog na motregen':
     summary= 10
-  elif summary == 'motregen en regen':
+  elif summary == 'Motregen en regen':
     summary= 11
-  elif summary == 'af en toe lichte regen':
+  elif summary == 'Af en toe lichte regen':
     summary= 12
-  elif summary == 'lichte regen':
+  elif summary == 'Lichte regen':
     summary= 13
-  elif summary == 'regen':
+  elif summary == 'Regen':
     summary= 14
-  elif summary == 'droog na regen':
+  elif summary == 'Droog na regen':
     summary= 15
   else:
-    summary= 0
     print('Unknown! ->:', summary)
+    summary= 0
   return str(summary)
 
 
@@ -138,8 +138,8 @@ def convert_image(image: str) -> str:
   elif image == 'wolkennacht':
     image= 13
   else:
-    image= 0
     print('Unknown! ->:', image)
+    image= 0
   return str(image)
 
 
