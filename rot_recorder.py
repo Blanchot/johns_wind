@@ -1,13 +1,16 @@
 #!/usr/bin/python3
 
 '''15 April 2019: Rotterdam Weather Recorder to run on Diana
-Recording: [temp, windr (direction), windkmh, lv (humidity), luchtd (pressure), sup (sunrise), sunder (sunset)]
+17 April 2019: Added summary and image (icon) recording and conversion
+24 April 2019: Added alarm field (curious how this is represented)
+
+Currently recording 10 fields: 
+date&time, timestamp, temp, wind_dir, wind_kmh, humidity, pressure, summary, image, alarm
 at 10 minute intervals and storing these in a csv file
+
 Info over the weerlive API: http://weerlive.nl/delen.php
 Requires: records.txt in the same folder
 
-17 April 2019: Added summary and image (icon) recording and conversion
-  
 Wind Direction: https://en.m.wikipedia.org/wiki/Wind_direction
 https://nl.m.wikipedia.org/wiki/Windstreek
 '''
@@ -162,10 +165,13 @@ def peil():
     summary= convert_summary(summary) #convert to integer
     image= rwl['liveweer'][0]['image'] #image: str
     image= convert_image(image) #convert to integer
+    alarm= rwl['liveweer'][0]['alarm']
+    
     d_t= tijd()
     timestamp= int(time.time())
     timestamp= str(timestamp)
-    update= d_t+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press+', '+summary+', '+image
+    update= d_t+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press+', '+summary+', '+image+', '+ alarm
+    
     print(update)
     
     fileobj= open('/home/pi/johns_wind/records.txt', 'a')
