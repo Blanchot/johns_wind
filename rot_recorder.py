@@ -205,7 +205,7 @@ def peil():
     #raise JSONDecodeError("Expecting value", s, err.value) from None
     #json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
     print('JSON Error: Expecting value received None')
-        d_t= tijd()
+    d_t= tijd()
     timestamp= int(time.time())
     timestamp= str(timestamp)
     
