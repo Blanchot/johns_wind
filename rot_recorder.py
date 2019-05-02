@@ -3,6 +3,8 @@
 '''15 April 2019: Rotterdam Weather Recorder to run on Diana
 17 April 2019: Added summary and image (icon) recording and conversion
 24 April 2019: Added alarm field (curious how this is represented)
+02 May 2019: Wrote some code to write a line to records.txt in case of connection or json error
+(If this works... will need to refactor at some point to simplify this code)
 
 Currently recording 10 fields: 
 date&time, timestamp, temp, wind_dir, wind_kmh, humidity, pressure, summary, image, alarm
@@ -24,6 +26,7 @@ rwl= dict()
 
 
 def tijd():
+  '''returns formated local date and local time'''
   timestamp= int(time.time())
   localtime= datetime.datetime.fromtimestamp(timestamp)
   #localdate= localtime.strftime('%d-%m-%Y')
@@ -180,11 +183,48 @@ def peil():
     fileobj.close
   
   except requests.ConnectionError:
+    '''In case of error still write a line and use '17'' in image column to indicate lack of data'''
     print("Error querying WeerLive API")
+    d_t= tijd()
+    timestamp= int(time.time())
+    timestamp= str(timestamp)
+    
+    blank= '_'
+    update= d_t+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
+    
+    print(update)
+    
+    #this at the moment is unecessarily duplicated
+    fileobj= open('/home/pi/johns_wind/records.txt', 'a')
+    fileobj.write(update)
+    fileobj.write("\n")
+    fileobj.close
+  
+  except json.decoder.JSONDecodeError:
+    '''In case of error still write a line and use '17'' in image column to indicate lack of data'''
+    #raise JSONDecodeError("Expecting value", s, err.value) from None
+    #json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+    print('JSON Error: Expecting value received None')
+        d_t= tijd()
+    timestamp= int(time.time())
+    timestamp= str(timestamp)
+    
+    blank= '_'
+    update= d_t+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
+    
+    print(update)
+    
+    #this at the moment is unecessarily duplicated
+    fileobj= open('/home/pi/johns_wind/records.txt', 'a')
+    fileobj.write(update)
+    fileobj.write("\n")
+    fileobj.close
+
 
 #peil()
 
 while True:
   peil()
   time.sleep(600)
+
 
