@@ -3,42 +3,40 @@
 '''15 April 2019: Rotterdam Weather Recorder to run on Diana
 17 April 2019: Added summary and image (icon) recording and conversion
 24 April 2019: Added alarm field (curious how this is represented)
-02 May 2019: Wrote some code to write a line to records.txt in case of connection or json error
-(If this works... will need to refactor at some point to simplify this code)
+02 May 2019: Wrote some code to write a line to records.txt in case of connection or json error and refactored code
 
-Currently recording 10 fields: 
-date&time, timestamp, temp, wind_dir, wind_kmh, humidity, pressure, summary, image, alarm
+Currently recording 10 fields saved as 11 comma separated values: 
+date&time, timestamp, temp, wind_dir (saved as dir and numeric bearing), wind_kmh, humidity, pressure, summary, image, alarm
 at 10 minute intervals and storing these in a csv file
 
 Info over the weerlive API: http://weerlive.nl/delen.php
 Requires: records.txt in the same folder
-
-Wind Direction: https://en.m.wikipedia.org/wiki/Wind_direction
-https://nl.m.wikipedia.org/wiki/Windstreek
 '''
 
 import requests, json
 import datetime
 import time
-#import pprint
 
-rwl= dict()
-
-
-def tijd():
-  '''returns formated local date and local time'''
+#--------------------------------------------- HELPER FUNCTIONS
+def tijd() -> tuple:
+  '''returns a 2-tuple: local datetime + timestamp, both as strings'''
   timestamp= int(time.time())
-  localtime= datetime.datetime.fromtimestamp(timestamp)
-  #localdate= localtime.strftime('%d-%m-%Y')
-  localdate= localtime.strftime('%d-%m')
-  #localtime= localtime.strftime('%H:%M:%S')
-  localtime= localtime.strftime('%H:%M')
-  d_t= localdate + ' ' + localtime
-  #print(localdate)
-  #print(localtime)
-  return d_t
+  curr_dt= datetime.datetime.fromtimestamp(timestamp)
+  curr_dt= curr_dt.strftime('%d-%m %H:%M')
+  timestamp= str(timestamp)
+  return (curr_dt, timestamp)
 
 
+def write_file(update: str):
+  '''writes to update to file using with context manager. 
+  Eventually write code here to create new file each 35 days'''
+  with open('/home/pi/johns_wind/records.txt', 'a') as fileobj:
+  #with open('records.txt', 'a') as fileobj: #for testing
+    fileobj.write(update)
+    fileobj.write("\n")
+
+
+#--------------------------------------------- CONVERSION FUNCTIONS
 def convert_wind_dir(wind_dir: str) -> str:
   '''Convert NL to UK and add compass directions
   Winds COME from the direction/compass point given'''
@@ -149,13 +147,12 @@ def convert_image(image: str) -> str:
   return str(image)
 
 
+#--------------------------------------------- MAIN FUNCTION
 def peil():
-  global rwl
+  '''Main loop'''
   weerlive = "http://weerlive.nl/api/json-10min.php?locatie=Rotterdam"
   try:
     rwl= requests.get(weerlive).json() #rwl is dictionary object
-    #print(rwl)
-    #pprint.pprint(rwl)
     temp= rwl['liveweer'][0]['temp'] #temp: str
     wind_dir= rwl['liveweer'][0]['windr'] #wind_dir: str
     wind_dir= convert_wind_dir(wind_dir)
@@ -170,61 +167,42 @@ def peil():
     image= convert_image(image) #convert to integer
     alarm= rwl['liveweer'][0]['alarm']
     
-    d_t= tijd()
-    timestamp= int(time.time())
-    timestamp= str(timestamp)
-    update= d_t+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press+', '+summary+', '+image+', '+ alarm
+    curr_dt, timestamp= tijd()
+    update= curr_dt+', '+timestamp+', '+temp+', '+wind_dir+', '+wind_kmh+', '+humid+', '+press+', '+summary+', '+image+', '+ alarm
     
     print(update)
-    
-    fileobj= open('/home/pi/johns_wind/records.txt', 'a')
-    fileobj.write(update)
-    fileobj.write("\n")
-    fileobj.close
+    write_file(update)
   
   except requests.ConnectionError:
     '''In case of error still write a line and use '17'' in image column to indicate lack of data'''
     print("Error querying WeerLive API")
-    d_t= tijd()
-    timestamp= int(time.time())
-    timestamp= str(timestamp)
-    
+    curr_dt, timestamp= tijd()
     blank= '_'
-    update= d_t+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
+    update= curr_dt+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
     
     print(update)
-    
-    #this at the moment is unecessarily duplicated
-    fileobj= open('/home/pi/johns_wind/records.txt', 'a')
-    fileobj.write(update)
-    fileobj.write("\n")
-    fileobj.close
+    write_file(update)
   
   except json.decoder.JSONDecodeError:
     '''In case of error still write a line and use '17'' in image column to indicate lack of data'''
-    #raise JSONDecodeError("Expecting value", s, err.value) from None
-    #json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
     print('JSON Error: Expecting value received None')
-    d_t= tijd()
-    timestamp= int(time.time())
-    timestamp= str(timestamp)
-    
+    curr_dt, timestamp= tijd()
     blank= '_'
-    update= d_t+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
+    update= curr_dt+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
     
     print(update)
-    
-    #this at the moment is unecessarily duplicated
-    fileobj= open('/home/pi/johns_wind/records.txt', 'a')
-    fileobj.write(update)
-    fileobj.write("\n")
-    fileobj.close
+    write_file(update)
 
 
-#peil()
+#peil() #for testing
 
 while True:
   peil()
   time.sleep(600)
 
 
+'''
+JSONDecodeError NOTES:
+raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+'''
