@@ -4,13 +4,14 @@
 17 April 2019: Added summary and image (icon) recording and conversion
 24 April 2019: Added alarm field (curious how this is represented)
 02 May 2019: Wrote some code to write a line to records.txt in case of connection or json error and refactored code
+03 May 2019: Added alarm text recording (to alarms.txt)
 
 Currently recording 10 fields saved as 11 comma separated values: 
 date&time, timestamp, temp, wind_dir (saved as dir and numeric bearing), wind_kmh, humidity, pressure, summary, image, alarm
 at 10 minute intervals and storing these in a csv file
 
 Info over the weerlive API: http://weerlive.nl/delen.php
-Requires: records.txt in the same folder
+Requires: records.txt and alarms.txt in the same folder
 '''
 
 import requests, json
