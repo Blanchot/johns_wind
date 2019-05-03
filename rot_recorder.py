@@ -36,6 +36,13 @@ def write_file(update: str):
     fileobj.write("\n")
 
 
+def write_alarm(alarm_record: str):
+  '''writes eventual alarm messages to file using with context manager'''
+  with open('/home/pi/johns_wind/alarms.txt', 'a') as fileobj:
+    fileobj.write(alarm_record)
+    fileobj.write("\n")
+
+
 #--------------------------------------------- CONVERSION FUNCTIONS
 def convert_wind_dir(wind_dir: str) -> str:
   '''Convert NL to UK and add compass directions
@@ -172,7 +179,14 @@ def peil():
     
     print(update)
     write_file(update)
-  
+    
+    if int(alarm):
+      alarm_txt= rwl['liveweer'][0]['alarmtxt'] #alarm text if alarm
+      curr_dt, timestamp= tijd()
+      alarm_record= curr_dt+', '+timestamp+', '+ alarm_txt
+      write_alarm(alarm_record)
+      
+      
   except requests.ConnectionError:
     '''In case of error still write a line and use '17'' in image column to indicate lack of data'''
     print("Error querying WeerLive API")
