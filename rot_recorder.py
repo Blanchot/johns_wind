@@ -193,7 +193,7 @@ def peil():
     print("Error querying WeerLive API")
     curr_dt, timestamp= tijd()
     blank= '_'
-    update= curr_dt+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
+    update= curr_dt+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
     
     print(update)
     write_file(update)
@@ -203,7 +203,7 @@ def peil():
     print('JSON Error: Expecting value received None')
     curr_dt, timestamp= tijd()
     blank= '_'
-    update= curr_dt+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
+    update= curr_dt+ ', ' +timestamp+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +blank+ ', ' +'17'+ ', ' +blank
     
     print(update)
     write_file(update)
